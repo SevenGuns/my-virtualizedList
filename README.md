@@ -1,68 +1,144 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
 
-In the project directory, you can run:
+# 基于React实现虚拟列表
 
-### `yarn start`
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
 
-### `yarn test`
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# 实现class extends关键字
 
-### `yarn build`
+### 实现思路
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+JS的继承
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+```javascript
+class A {
+	constructor() {
+    this.foo = 'foo';
+  }
+  bar = 'bar'
+	static haha() {
+    return 'haha'
+  }
+	get mua() {
+    return 'mua'
+  }
+	set myTest(val) {
+    this.foo = val
+  }  
+}
+A.prototype.a = 'a';
+class B extends A {
+	constructor(props) {
+    super(props);
+    this.name = 'b';
+  }
+}
+B.prototype.b = 'b';
+var b = new B();
+console.log(b);
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+\_\_proto\_\_指向构造函数的原型对象，构造函数基于原型生成对象
+把B的构造函数的原型对象也就是b的原型 的原型 指向 A的原型
 
-### `yarn eject`
+##### 实现function继承class
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+> new 是运算符 
+>
+> extends 是关键字
+>
+> new A，构造函数如果没有返回数据，则会返回实例对象，如果有则直接返回对象
+>
+> Reflect.construct() defineProperty能够复制
+>
+> 修改constructor
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```javascript
+class A {
+	constructor() {
+    // 实例属性
+    this.foo = 'foo';
+  }
+  // 私有字段声明 只能在类内部读取
+  #height = 0;
+  // 成员变量
+  bar = 'bar'
+  // 静态方法
+	static haha() {
+    return 'haha'
+  }
+  // getter
+	get mua() {
+    return 'mua'
+  }
+  // setter
+	set myTest(val) {
+    this.foo = val
+  }
+	// 成员方法
+	test() {
+    return 'test';
+  }
+}
+// 原型
+A.prototype.a = 'a';
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+function B(...args) {
+	const self = Reflect.construct(A, args, B);
+  // 调用构造函数 将this指向实例
+  self.name = 'b';
+  return self;
+}
+B.prototype.b = 'b';
+Reflect.setPrototypeOf(B.prototype, A.prototype);
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+var b = new B();
+console.log('b', b);
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+改变原型链的方法：
 
-### Analyzing the Bundle Size
+1. obj.\_\_proto\_\_ = {}
+2. Object.setPrototypeOf(obj, prototype)
+3. Object.create
+4. new
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
 
-### Making a Progressive Web App
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
 
-### Advanced Configuration
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+**`new` 运算符**创建一个用户定义的对象类型的实例或具有构造函数的内置对象的实例。**`new`** 关键字会进行如下的操作：
 
-### Deployment
+1. 创建一个空的简单JavaScript对象（即`**{}**`）；
+2. 链接该对象（即设置该对象的构造函数）到另一个对象 ；
+3. 将步骤1新创建的对象作为`**this**`的上下文 ；
+4. 如果该函数没有返回对象，则返回`**this**`。
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
 
-### `yarn build` fails to minify
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+**函数声明**和**类声明**之间的一个重要区别是函数声明会[提升](https://developer.mozilla.org/zh-CN/docs/Glossary/Hoisting)，类声明不会
+
+**类不会发生自动包装**
+
+
+
+公有字段声明
+
+
+
+Symbol.species
+
+
+
+#### proxy/reflect
+
+meta programming：元编程，对编程语言进行编程
+
+
+
