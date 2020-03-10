@@ -1,12 +1,15 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 // import VirtualizedList from './components/VirtualizedList';
-import TestFuncitonComp from './components/TestFuncitonComp';
+// import TestFuncitonComp from './components/TestFuncitonComp';
 
 function App() {
-  const ref = useCallback(comp => {
-    console.log(comp);
+  const [value, setValue] = useState('');
+  const onInput = useCallback(e => {
+    const value = e.target.value;
+    console.log(value);
+    setValue(value);
   }, []);
-  return <TestFuncitonComp ref={ref}></TestFuncitonComp>;
+  return <input type="text" value={value} onChange={onInput} />;
 }
 
 export default App;
