@@ -4,6 +4,8 @@
 
 `startIndex`, `listSize`, `debounceAfter`, `pointer-events: none`,`event capture`,`passive event`
 
+VirtualizedList.js
+
 
 
 # 实现class extends关键字
